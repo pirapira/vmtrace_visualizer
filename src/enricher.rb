@@ -158,9 +158,14 @@ input = JSON.parse(input_string)
 
 def modify_structLogs sLogs
   output = []
+  step_number = 0
 
   sLogs.each do |step|
     output << step
+    if step["depth"] == 1 then
+      step["step"] = step_number
+      step_number += 1
+    end
   end
 
   output
