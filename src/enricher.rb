@@ -148,3 +148,12 @@ end
 def origin depth, step, nth
   {:depth => depth, :step => step, :nth => nth}
 end
+
+
+
+require 'json'
+
+input_string = ARGF.read
+input = JSON.parse(input_string)
+
+puts JSON.generate(input)
