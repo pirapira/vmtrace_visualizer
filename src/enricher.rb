@@ -10,6 +10,8 @@ def consume_produce opcode
     pair 2, 1
   when "SUB"
     return pair 2, 1
+  when "MUL"
+    return pair 2, 1
   when "DIV"
     return pair 2, 1
   when "SDIV"
@@ -110,6 +112,8 @@ def consume_produce opcode
     return pair 0, 1
   when "JUMPDEST"
     return pair 0, 0
+  when "POP"
+    return pair 1, 0
   when /PUSH[1-9]/
     return pair 0, 1
   when /PUSH[1-3][0-9]/
@@ -142,11 +146,13 @@ def consume_produce opcode
     return pair 6, 1
   when "SUICIDE"
     return pair 1, 0
+  else
+    fail "unknown optocde #{opcode}"
   end
 end
 
-def origin depth, step, nth
-  {:depth => depth, :step => step, :nth => nth}
+def origin depth, step
+  {:depth => depth, :step => step}
 end
 
 
@@ -156,15 +162,37 @@ require 'json'
 input_string = ARGF.read
 input = JSON.parse(input_string)
 
+def update_stack_origins orig, step
+  opcode = step["op"]
+  c = (consume_produce opcode)[:consume]
+  p = (consume_produce opcode)[:produce]
+
+  orig = orig[0...(orig.size-c)]
+  here = origin 1, step["step"]
+  new_elements = Array.new(p, here)
+  orig = orig + new_elements
+
+  orig
+end
+
 def modify_structLogs sLogs
   output = []
   step_number = 0
+  stack_origins = []
 
   sLogs.each do |step|
     output << step
     if step["depth"] == 1 then
       step["step"] = step_number
       step_number += 1
+
+      # This assertion should hold in the precondition.
+      raise "stack lengths do not match" unless stack_origins.size == step["stack"].size
+
+      # TODO: remove this once we have "arg_origins"
+      step["stack_origins"] = stack_origins
+
+      stack_origins = update_stack_origins stack_origins, step
     end
   end
 
