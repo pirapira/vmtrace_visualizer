@@ -157,7 +157,13 @@ input_string = ARGF.read
 input = JSON.parse(input_string)
 
 def modify_structLogs sLogs
-  sLogs
+  output = []
+
+  sLogs.each do |step|
+    output << step
+  end
+
+  output
 end
 
 def modify_input input
