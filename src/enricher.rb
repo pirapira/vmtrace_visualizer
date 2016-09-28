@@ -167,6 +167,10 @@ def update_stack_origins orig, step
   c = (consume_produce opcode)[:consume]
   p = (consume_produce opcode)[:produce]
 
+  # TODO
+  # DUP and SWAP should not just remove n-elements and add m-elements.
+  # They should only be touching two elements on the origin
+
   orig = orig[0...(orig.size-c)]
   here = origin 1, step["step"]
   new_elements = Array.new(p, here)
@@ -189,10 +193,11 @@ def modify_structLogs sLogs
       # This assertion should hold in the precondition.
       raise "stack lengths do not match" unless stack_origins.size == step["stack"].size
 
-      # TODO: remove this once we have "arg_origins"
-      step["stack_origins"] = stack_origins
+      c = (consume_produce (step["op"]))[:consume]
+      step["arg_origins"] = stack_origins[(stack_origins.size-c)...stack_origins.size]
 
       stack_origins = update_stack_origins stack_origins, step
+
     end
   end
 
