@@ -156,4 +156,4 @@ require 'json'
 input_string = ARGF.read
 input = JSON.parse(input_string)
 
-puts JSON.generate(input)
+puts JSON.generate(input, :indent => "	", :object_nl => "\n", :array_nl => "\n")
