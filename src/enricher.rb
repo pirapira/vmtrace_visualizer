@@ -162,8 +162,30 @@ require 'json'
 input_string = ARGF.read
 input = JSON.parse(input_string)
 
+def update_stack_origins_swap orig, number
+  number = number + 1
+  new = orig[0...orig.size - number] + [orig[-1]] + orig[orig.size-number+1...orig.size-1] + [orig[orig.size-number]]
+  raise "stack lengths do not match #{orig.size} != #{new.size}, #{number}" unless orig.size == new.size
+  new
+end
+
+def update_stack_origins_dup orig, number
+  new = orig + [orig[orig.size-number]]
+  raise "stack lengths do not match" unless orig.size + 1 == new.size
+  new
+end
+
 def update_stack_origins orig, step
   opcode = step["op"]
+
+  if /SWAP([0-9]*)/.match(opcode)
+    number = $1.to_i
+    return update_stack_origins_swap orig, number
+  elsif /DUP([0-9]*)/.match(opcode)
+    number = $1.to_i
+    return update_stack_origins_dup orig, number
+  end
+
   c = (consume_produce opcode)[:consume]
   p = (consume_produce opcode)[:produce]
 
