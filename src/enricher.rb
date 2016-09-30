@@ -266,6 +266,9 @@ if options[:graphviz]
 
   logs = output['structLogs']
   logs.each do | step |
+    next if /SWAP([0-9]*)/.match(step['op'])
+    next if /DUP([0-9]*)/.match(step['op'])
+
     puts "#{step['step']} [label=\"#{step['op']}\"]"
     step['arg_origins'].each do |origin|
       puts "#{origin[:step]} -> #{step['step']} [label=\"#{origin[:value]}\"]"
