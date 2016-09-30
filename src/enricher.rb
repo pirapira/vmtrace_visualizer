@@ -157,11 +157,6 @@ end
 
 
 
-require 'json'
-
-input_string = ARGF.read
-input = JSON.parse(input_string)
-
 def update_stack_origins_swap orig, number
   number = number + 1
   new = orig[0...orig.size - number] + [orig[-1]] + orig[orig.size-number+1...orig.size-1] + [orig[orig.size-number]]
@@ -239,6 +234,26 @@ def modify_input input
 
   output
 end
+
+require 'optparse'
+
+require 'json'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: ruby rnricher.rb [options] trace.json"
+
+  opts.on("-g", "--graphviz", "produce a graphviz output") do |v|
+    options[:dot] = true
+  end
+  opts.on("-h", "--help", "Prints this help") do
+    puts opts
+    exit
+  end
+end.parse!
+
+input_string = ARGF.read
+input = JSON.parse(input_string)
 
 output = modify_input input
 
