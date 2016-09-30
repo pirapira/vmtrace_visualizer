@@ -244,7 +244,7 @@ OptionParser.new do |opts|
   opts.banner = "Usage: ruby rnricher.rb [options] trace.json"
 
   opts.on("-g", "--graphviz", "produce a graphviz output") do |v|
-    options[:dot] = true
+    options[:graphviz] = true
   end
   opts.on("-h", "--help", "Prints this help") do
     puts opts
@@ -257,4 +257,9 @@ input = JSON.parse(input_string)
 
 output = modify_input input
 
-puts JSON.generate(output, :indent => "	", :object_nl => "\n", :array_nl => "\n")
+if options[:graphviz]
+  puts "graphviz output not implemented yet"
+  exit 1
+else
+  puts JSON.generate(output, :indent => "	", :object_nl => "\n", :array_nl => "\n")
+end
