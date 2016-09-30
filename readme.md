@@ -77,3 +77,17 @@ After the transformation
 },
 
 ```
+
+## Graphviz output
+
+As a preparation, you need the `graphviz` tools:
+```
+sudo apt install graphviz
+```
+
+Then,
+```
+ruby src/enricher.rb -g example/example_1.json > graph.dot && \
+dot -Tpdf graph.dot -o graph.pdf
+```
+would produce a data-flow diagram in `graph.pdf`.

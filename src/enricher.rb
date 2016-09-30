@@ -257,9 +257,21 @@ input = JSON.parse(input_string)
 
 output = modify_input input
 
+prefix = 'digraph {'
+suffix = '}'
+
 if options[:graphviz]
-  puts "graphviz output not implemented yet"
-  exit 1
+  puts prefix
+
+  logs = output['structLogs']
+  logs.each do | step |
+    puts "#{step['step']} [label=\"#{step['op']}\"]"
+    step['arg_origins'].each do |origin|
+      puts "#{origin[:step]} -> #{step['step']}"
+    end
+  end
+
+  puts suffix
 else
   puts JSON.generate(output, :indent => "	", :object_nl => "\n", :array_nl => "\n")
 end
