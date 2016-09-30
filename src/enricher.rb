@@ -184,10 +184,6 @@ def update_stack_origins orig, step
   c = (consume_produce opcode)[:consume]
   p = (consume_produce opcode)[:produce]
 
-  # TODO
-  # DUP and SWAP should not just remove n-elements and add m-elements.
-  # They should only be touching two elements on the origin
-
   orig = orig[0...(orig.size-c)]
   here = origin 1, step["step"]
   new_elements = Array.new(p, here)
@@ -212,6 +208,11 @@ def modify_structLogs sLogs
 
       c = (consume_produce (step["op"]))[:consume]
       step["arg_origins"] = stack_origins[(stack_origins.size-c)...stack_origins.size]
+      step["arg_origins"].each_index do | idx |
+        v = step["stack"][stack_origins.size - c + idx]
+        v.sub!(/^0*/, "0x")
+        step["arg_origins"][idx][:value] = v
+      end
 
       stack_origins = update_stack_origins stack_origins, step
 
@@ -267,7 +268,7 @@ if options[:graphviz]
   logs.each do | step |
     puts "#{step['step']} [label=\"#{step['op']}\"]"
     step['arg_origins'].each do |origin|
-      puts "#{origin[:step]} -> #{step['step']}"
+      puts "#{origin[:step]} -> #{step['step']} [label=\"#{origin[:value]}\"]"
     end
   end
 
