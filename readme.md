@@ -1,4 +1,6 @@
-# VM trace enricher
+# Ethereum VM trace visualizer
+
+![Dataflow visualized](https://yoichihirai.com/spam.png)
 
 [geth](https://github.com/ethereum/go-ethereum) outputs a VM trace for an Ethereum
  transaction, by [`debug.traceTransaction()` function](https://github.com/ethereum/go-ethereum/wiki/Management-APIs#debug_tracetransaction).
