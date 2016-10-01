@@ -266,8 +266,10 @@ if options[:graphviz]
 
   logs = output['structLogs']
   logs.each do | step |
+    next unless step["depth"] == 1
     next if /SWAP([0-9]*)/.match(step['op'])
     next if /DUP([0-9]*)/.match(step['op'])
+    next if "JUMPDEST" = step['op']
 
     puts "#{step['step']} [label=\"#{step['op']}\"]"
     step['arg_origins'].each do |origin|
