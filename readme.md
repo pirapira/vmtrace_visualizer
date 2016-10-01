@@ -93,3 +93,7 @@ ruby src/enricher.rb -g example/example_1.json > graph.dot && \
 dot -Tpdf graph.dot -o graph.pdf
 ```
 would produce a data-flow diagram in `graph.pdf`.
+
+## How to obtain vm traces
+
+The input JSON can be obtained from `geth` RPC.  See `example/get_example_1.sh` for how.
