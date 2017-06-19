@@ -7,8 +7,10 @@
 This repository contains a small ruby program that annotates the traces with the original steps that produced the operands.
 
 The enricher tries to answer questions like
+
 * how does this contract calculate the value it sends?
 * how does this contract determine the address it calls?
+
 on concrete transaction logs.
 
 Currently the enricher keeps track of the origins of values on the stack.
